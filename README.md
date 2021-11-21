@@ -30,15 +30,25 @@
 5. Не тратить на задание больше 1-2 дней.
 
 ## Installation
-
-- Windows
-```bash
+### Prod
+```shell
 cd test-task-loyalty-service; docker-compose up
-docker run -it --user www -v ${pwd}:/var/www test-task-loyalty-service /bin/sh -lc "composer install && cp .env.example .env && php artisan key:generate && php artisan migrate"
 ```
-
+### Dev
+```shell
+cp docker-compose.override.yml.example docker-compose.override.yml;
+cd test-task-loyalty-service;
+docker-compose up
+```
+- Windows
+```shell
+docker run -it --user 1000 -v ${pwd}:/var/www test-task-loyalty-service /bin/sh -lc "composer install && cp .env.example .env && php artisan key:generate && php artisan migrate"
+```
 - Linux
-```bash
-cd test-task-loyalty-service && docker-compose up
-docker run -it --user www -v $PWD:/var/www test-task-loyalty-service /bin/sh -lc "composer install && cp .env.example .env && php artisan key:generate && php artisan migrate"
+```shell
+docker run -it --user 1000 -v $PWD:/var/www test-task-loyalty-service /bin/sh -lc "composer install && cp .env.example .env && php artisan key:generate && php artisan migrate"
 ```
+Stop running docker-compose.
+Uncomment `command: "php artisan serve --host=0.0.0.0 --port=8000"`.
+Run `docker-compose up`.
+

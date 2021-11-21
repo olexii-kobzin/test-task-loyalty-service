@@ -1,9 +1,7 @@
 FROM php:8.0.11-fpm-alpine
 
-# Set working directory
 WORKDIR /var/www
 
-# Install dependencies
 RUN apk -v --update add \
     zip \
     mc \
@@ -12,15 +10,11 @@ RUN apk -v --update add \
     curl \
     sqlite
 
-# Clear cache
 RUN rm -rf /var/lib/apt/lists/*
 
-# Install extensions
 RUN apk add zlib-dev libzip-dev freetype-dev libxml2-dev \
     && docker-php-ext-install pdo zip
 
-
-# Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer \
         --install-dir=/usr/local/bin && \
@@ -29,7 +23,15 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 RUN addgroup -S www && adduser -S www -G www
 
-# Change current user to www
+RUN chown www:www -R /var/www/
+
 USER www
+
+ADD --chown=www:www . /var/www
+
+RUN composer install \
+    && cp .env.example .env  \
+    && php artisan key:generate  \
+    && php artisan migrate
 
 CMD ["php", "artisan", "serve", "--host", "0.0.0.0"]

@@ -1,0 +1,17 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: .docker/dev/Dockerfile
+    image: test-task-loyalty-service
+    volumes:
+      - ./:/var/www/
+      - ./database/sqlite/loayalty_api.sqlite:/var/www/database/sqlite/loayalty_api.sqlite
+    container_name: loyalty-api
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+#    command: "php artisan serve --host=0.0.0.0 --port=8000"
+    ports:
+      - "8000:8000"
